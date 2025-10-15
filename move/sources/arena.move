@@ -89,6 +89,6 @@ public fun battle(hero: Hero, arena: Arena, ctx: &mut TxContext) {
     
 
     // TODO: Delete the battle place ID 
-    object::delete(id);
+    id.delete();
 }
 
