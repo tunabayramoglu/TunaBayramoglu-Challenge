@@ -1,5 +1,4 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { MIST_PER_SUI } from "@mysten/sui/utils";
 
 export const buyHero = (packageId: string, listHeroId: string, priceInSui: string) => {
   const tx = new Transaction();
@@ -17,7 +16,8 @@ export const buyHero = (packageId: string, listHeroId: string, priceInSui: strin
   // Hints:
   // Use tx.object() for the ListHero object
   // Use the paymentCoin from splitCoins for payment
-  const priceInMist = BigInt(priceInSui) * MIST_PER_SUI;
+  const SUI_TO_MIST = 1_000_000_000;
+  const priceInMist = BigInt(Math.floor(parseFloat(priceInSui) * SUI_TO_MIST));
   const [paymentCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(priceInMist)]);
 
   tx.moveCall({
