@@ -1,4 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
+import { MIST_PER_SUI } from "@mysten/sui/utils";
 
 export const listHero = (
   packageId: string,
@@ -17,6 +18,16 @@ export const listHero = (
   // - Use tx.object() for the hero object
   // - Use tx.pure.u64() for the price in MIST
   // - Remember: 1 SUI = 1_000_000_000 MIST
+
+  const priceInMist = BigInt(priceInSui) * MIST_PER_SUI;
+
+  tx.moveCall({
+    target: `${packageId}::marketplace::list_hero`,
+    arguments: [
+      tx.object(heroId),
+      tx.pure.u64(priceInMist),
+    ],
+  });
 
   return tx;
 };
