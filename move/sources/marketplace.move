@@ -98,7 +98,7 @@ public fun buy_hero(list_hero: ListHero, coin: Coin<SUI>, ctx: &mut TxContext) {
     transfer::public_transfer(coin, seller);
 
     // TODO: Transfer hero NFT to buyer (ctx.sender())
-    transfer::transfer(nft, ctx.sender());
+    transfer::public_transfer(nft, ctx.sender());
 
     // TODO: Emit HeroBought event with transaction details (Don't forget to use object::uid_to_inner(&id) )
     event::emit(HeroBought {
@@ -110,7 +110,7 @@ public fun buy_hero(list_hero: ListHero, coin: Coin<SUI>, ctx: &mut TxContext) {
     });
 
     // TODO: Delete the listing ID (object::delete(id))
-    id.delete();
+    object::delete(id);
 }
 
 // ========= ADMIN FUNCTIONS =========
@@ -124,10 +124,10 @@ public fun delist(_: &AdminCap, list_hero: ListHero) {
     let ListHero { id, nft, price: _ , seller } = list_hero;
 
     // TODO:Transfer NFT back to original seller
-    transfer::transfer(nft, seller);
+    transfer::public_transfer(nft, seller);
 
     // TODO:Delete the listing ID (object::delete(id))
-    id.delete();
+    object::delete(id);
 }
 
 public fun change_the_price(_: &AdminCap, list_hero: &mut ListHero, new_price: u64) {

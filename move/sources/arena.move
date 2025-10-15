@@ -62,33 +62,39 @@ public fun battle(hero: Hero, arena: Arena, ctx: &mut TxContext) {
         // If hero wins: both heroes go to ctx.sender()
         // If warrior wins: both heroes go to battle place owner
     if (hero.hero_power() > warrior.hero_power()) {
-        transfer::transfer(hero, ctx.sender());
-        transfer::transfer(warrior, ctx.sender());
+        let hero_id = object::id(&hero);
+        let warrior_id = object::id(&warrior);
+
+        transfer::public_transfer(hero, ctx.sender());
+        transfer::public_transfer(warrior, ctx.sender());
 
     // TODO:  Emit BattlePlaceCompleted event with winner/loser IDs (Don't forget to use object::id(&warrior) or object::id(&hero) ). 
         // Hints:  
         // You have to emit this inside of the if else statements
         event::emit(ArenaCompleted {
-            winner_hero_id: object::id(&hero),
-            loser_hero_id: object::id(&warrior),
+            winner_hero_id: hero_id,
+            loser_hero_id: warrior_id,
             timestamp: ctx.epoch_timestamp_ms()
         });
     } else {
-        transfer::transfer(hero, owner);
-        transfer::transfer(warrior, owner);
+        let hero_id = object::id(&hero);
+        let warrior_id = object::id(&warrior);
+
+        transfer::public_transfer(hero, owner);
+        transfer::public_transfer(warrior, owner);
 
     // TODO:  Emit BattlePlaceCompleted event with winner/loser IDs (Don't forget to use object::id(&warrior) or object::id(&hero) ). 
         // Hints:  
         // You have to emit this inside of the if else statements
         event::emit(ArenaCompleted {
-            winner_hero_id: object::id(&warrior),
-            loser_hero_id: object::id(&hero),
+            winner_hero_id: warrior_id,
+            loser_hero_id: hero_id,
             timestamp: ctx.epoch_timestamp_ms()
         });        
     }
     
 
     // TODO: Delete the battle place ID 
-    id.delete();
+    object::delete(id);
+    
 }
-
